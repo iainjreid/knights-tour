@@ -2,6 +2,11 @@
 
 exports.DirectionalValue = class {
   constructor(value, range) {
+    // Ensure that the value is present in the range
+    if (!range.includes(value)) {
+      throw new Error('Value not found in range');
+    }
+
     this._index = range.indexOf(value);
     this._range = range;
   }
@@ -13,11 +18,20 @@ exports.DirectionalValue = class {
   /**
    * @description This method will check to see whether or not the supplied distance would lead to a valid point on the
    *              board.
+   *
+   * @param {number} distance The distance to check if it is possible on the current range
+   *
+   * @returns {boolean} Whether or not the distance is possible on the current range
    */
   canMoveBy(distance) {
     return this._range[this._index + distance] !== undefined;
   }
 
+  /**
+   * @description This method will modify the current index according to the distance provided.
+   *
+   * @param {number} distance The distance to modify the current index by
+   */
   moveBy(distance) {
     // Ensure that the distance is achievable
     if (!this.canMoveBy(distance)) {
@@ -49,14 +63,14 @@ exports.VerticalValue = class extends exports.DirectionalValue {
 }
 
 exports.KnightPosition = class {
-  constructor(horizontal, vertical) {
+  constructor(horizontalValue, verticalValue) {
     // Ensure that the horizontal and vertical values are valid
-    if (!~horizontalRange.indexOf(horizontal) || !~verticalRange.indexOf(vertical)) {
-      throw new Error('Position not in range');
+    if (!(horizontalValue instanceof exports.HorizontalValue) || !(verticalValue instanceof exports.VerticalValue)) {
+      throw new Error('Value must be of the expected classes');
     }
 
-    this.horizontal = horizontal;
-    this.vertical = vertical;
+    this.horizontalValue = horizontalValue;
+    this.verticalValue = verticalValue;
   }
 
   /**
@@ -67,7 +81,18 @@ exports.KnightPosition = class {
   getAvailableMoves() {
     const positions = [];
 
-     
+    if (this.horizontalValue.canMoveBy(-2)) {
+      if (this.verticalValue.canMoveBy(1) {
+        positions.push(new exports.KnightPosition())
+      }
+    }   
   }
+}
+
+exports.createKnightPosition = (horizontalValue, verticalValue) => {
+  horizontalValue = new exports.HorizontalValue(horizontalValue);
+  verticalValue = new exports.VerticalValue(verticalValue);
+  
+  return new exports.KnightPosition(horizontalValue, verticalValue);
 }
 
