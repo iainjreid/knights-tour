@@ -1,0 +1,4 @@
+# Ignore all IDE generated files
+.idea
+.vscode
+
