@@ -123,3 +123,37 @@ exports.KnightPosition = class {
 exports.createKnightPosition = (horizontal, vertical) => {
   return new exports.KnightPosition(new exports.HorizontalValue(horizontal), new exports.VerticalValue(vertical));
 }
+
+const board = [];
+const touched = [];
+
+for (let horizontal of exports.HorizontalValue.range) {
+  for (let vertical of exports.VerticalValue.range) {
+    board.push(horizontal + vertical);
+    touched.push(false);
+  }
+}
+
+let knight = exports.createKnightPosition('A', 1);
+touched[board.indexOf('A1')] = true
+
+while (touched.some(x => !x)) {
+  const moves = knight.getAvailableMoves().filter(move => {
+    return !touched[board.indexOf(move.horizontal.value + move.vertical.value)];
+  });
+
+  if (!moves.length) {
+    return;
+  }
+
+  // Get least valueable move
+  let move = moves.reduce((move, currentMove) => {
+    return move.getAvailableMoves().length > currentMove.getAvailableMoves().length ? currentMove : move;
+  }, moves[0]);
+
+  knight = move;
+  console.log(move.horizontal.value + move.vertical.value)
+  touched[board.indexOf(move.horizontal.value + move.vertical.value)] = true;
+}
+
+console.log(touched)
