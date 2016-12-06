@@ -28,6 +28,22 @@ exports.DirectionalValue = class {
   }
 
   /**
+   * @description This method will return the future value of a supplied distance.
+   *
+   * @param {number} distance The distance to add to the current index
+   *
+   * @returns {any} The future value of the supplied distance
+   */
+  getMoveBy(distance) {
+    // Ensure that the distance is achievable
+    if (!this.canMoveBy(distance)) {
+      throw new Error('Distance not reachable');
+    }
+
+    return this._range[this._index + distance];
+  }
+
+  /**
    * @description This method will modify the current index according to the distance provided.
    *
    * @param {number} distance The distance to modify the current index by
@@ -63,14 +79,14 @@ exports.VerticalValue = class extends exports.DirectionalValue {
 }
 
 exports.KnightPosition = class {
-  constructor(horizontalValue, verticalValue) {
+  constructor(horizontal, vertical) {
     // Ensure that the horizontal and vertical values are valid
-    if (!(horizontalValue instanceof exports.HorizontalValue) || !(verticalValue instanceof exports.VerticalValue)) {
+    if (!(horizontal instanceof exports.HorizontalValue) || !(vertical instanceof exports.VerticalValue)) {
       throw new Error('Value must be of the expected classes');
     }
 
-    this.horizontalValue = horizontalValue;
-    this.verticalValue = verticalValue;
+    this.horizontal = horizontal;
+    this.vertical = vertical;
   }
 
   /**
@@ -80,19 +96,30 @@ exports.KnightPosition = class {
    */
   getAvailableMoves() {
     const positions = [];
+    const points = [
+      { horizontal: -2, vertical: 1 },
+      { horizontal: -2, vertical: -1 },
+      { horizontal: -1, vertical: 2 },
+      { horizontal: -1, vertical: -2 },
+      { horizontal: 1, vertical: 2 },
+      { horizontal: 1, vertical: -2 },
+      { horizontal: 2, vertical: 1 },
+      { horizontal: 2, vertical: -1 }
+    ];
 
-    if (this.horizontalValue.canMoveBy(-2)) {
-      if (this.verticalValue.canMoveBy(1) {
-        positions.push(new exports.KnightPosition())
+    for (let { horizontal, vertical } of points) {
+      if (this.horizontal.canMoveBy(horizontal) && this.vertical.canMoveBy(vertical)) {
+        horizontal = this.horizontal.getMoveBy(horizontal);
+        vertical = this.vertical.getMoveBy(vertical);
+
+        positions.push(exports.createKnightPosition(horizontal, vertical));
       }
-    }   
+    }
+
+    return positions;
   }
 }
 
-exports.createKnightPosition = (horizontalValue, verticalValue) => {
-  horizontalValue = new exports.HorizontalValue(horizontalValue);
-  verticalValue = new exports.VerticalValue(verticalValue);
-  
-  return new exports.KnightPosition(horizontalValue, verticalValue);
+exports.createKnightPosition = (horizontal, vertical) => {
+  return new exports.KnightPosition(new exports.HorizontalValue(horizontal), new exports.VerticalValue(vertical));
 }
-

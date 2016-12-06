@@ -25,6 +25,8 @@ assert.strictEqual(value.value, 1);
 // Ensure that the class will fail to instantiate when given invalid values
 assert.throws(() => new knightsTour.DirectionalValue(0, range));
 
+console.log(knightsTour.createKnightPosition('D', 1).getAvailableMoves())
+
 /**
  * @description This method will ensure that the referenced value is of the correct type (i.e. the type supplied in the
  *              second argument.
@@ -35,5 +37,3 @@ assert.throws(() => new knightsTour.DirectionalValue(0, range));
 function assertType(reference, type) {
   assert.equal(typeof reference, type);
 }
-
-for (let method in assert) console.log(method)
