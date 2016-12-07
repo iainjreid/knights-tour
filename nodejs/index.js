@@ -124,36 +124,62 @@ exports.createKnightPosition = (horizontal, vertical) => {
   return new exports.KnightPosition(new exports.HorizontalValue(horizontal), new exports.VerticalValue(vertical));
 }
 
-const board = [];
-const touched = [];
+let board = [];
+let touched = [];
+let history = [];
 
-for (let horizontal of exports.HorizontalValue.range) {
-  for (let vertical of exports.VerticalValue.range) {
-    board.push(horizontal + vertical);
-    touched.push(false);
-  }
-}
+(function bruteForce() {
+  board = [];
+  touched = [];
+  history = [];
 
-let knight = exports.createKnightPosition('A', 1);
-touched[board.indexOf('A1')] = true
-
-while (touched.some(x => !x)) {
-  const moves = knight.getAvailableMoves().filter(move => {
-    return !touched[board.indexOf(move.horizontal.value + move.vertical.value)];
-  });
-
-  if (!moves.length) {
-    return;
+  for (let horizontal of exports.HorizontalValue.range) {
+    for (let vertical of exports.VerticalValue.range) {
+      board.push(horizontal + vertical);
+      touched.push(false);
+    }
   }
 
-  // Get least valueable move
-  let move = moves.reduce((move, currentMove) => {
-    return move.getAvailableMoves().length > currentMove.getAvailableMoves().length ? currentMove : move;
-  }, moves[0]);
+  let knight = exports.createKnightPosition('A', 1);
+  touched[board.indexOf('A1')] = true
 
-  knight = move;
-  console.log(move.horizontal.value + move.vertical.value)
-  touched[board.indexOf(move.horizontal.value + move.vertical.value)] = true;
-}
+  while (touched.some(x => !x)) {
+    const moves = knight.getAvailableMoves().filter(move => {
+      return !touched[board.indexOf(move.horizontal.value + move.vertical.value)];
+    });
 
-console.log(touched)
+    if (!moves.length) {
+      break;
+    }
+
+    // Get least valueable move
+    let move = moves.reduce((recommendedMove, currentMove) => {
+      const recommendedMoveFutures = recommendedMove.getAvailableMoves();
+      const currentMoveFutures = currentMove.getAvailableMoves();
+
+      if (recommendedMoveFutures.length === currentMoveFutures.length) {
+        return [recommendedMove, currentMove][Math.random() * 2 >> 0]
+      }
+
+      return recommendedMoveFutures.length > currentMoveFutures.length ? currentMove : recommendedMove;
+    }, moves[0]);
+
+    knight = move;
+    history.push(move.horizontal.value + move.vertical.value)
+    touched[board.indexOf(move.horizontal.value + move.vertical.value)] = true;
+  }
+
+  let i = 0;
+  for (let value of touched) {
+    if (value) {
+      i++
+    }
+  }
+  
+  if (i !== board.length) {
+    bruteForce();
+  } else {
+    console.log(history)
+  }
+})()
+
