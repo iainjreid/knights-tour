@@ -1,130 +1,74 @@
 'use strict';
 
-exports.DirectionalValue = class {
-  constructor(value, range) {
-    // Ensure that the value is present in the range
-    if (!range.includes(value)) {
-      throw new Error('Value not found in range');
-    }
-
-    this._index = range.indexOf(value);
-    this._range = range;
+class Knight {
+  constructor(position = new Position(), board = new Board()) {
+    this.position = position;
+    this.board = board;
+    this.history = [];
   }
 
-  get value() {
-    return this._range[this._index];
+  moveTo(position) {
+    this.board.markPosition(this.history[this.history.length - 1]);
+    this.history.push(this.position);
+    this.position = position;
   }
 
-  /**
-   * @description This method will check to see whether or not the supplied distance would lead to a valid point on the
-   *              board.
-   *
-   * @param {number} distance The distance to check if it is possible on the current range
-   *
-   * @returns {boolean} Whether or not the distance is possible on the current range
-   */
-  canMoveBy(distance) {
-    return this._range[this._index + distance] !== undefined;
-  }
-
-  /**
-   * @description This method will return the future value of a supplied distance.
-   *
-   * @param {number} distance The distance to add to the current index
-   *
-   * @returns {any} The future value of the supplied distance
-   */
-  getMoveBy(distance) {
-    // Ensure that the distance is achievable
-    if (!this.canMoveBy(distance)) {
-      throw new Error('Distance not reachable');
-    }
-
-    return this._range[this._index + distance];
-  }
-
-  /**
-   * @description This method will modify the current index according to the distance provided.
-   *
-   * @param {number} distance The distance to modify the current index by
-   */
-  moveBy(distance) {
-    // Ensure that the distance is achievable
-    if (!this.canMoveBy(distance)) {
-      throw new Error('Distance not reachable');
-    }
-
-    this._index += distance;
+  reverseMove() {
+    this.position = this.history.pop();
+    this.board.unmarkPosition(this.position);
   }
 }
 
-exports.HorizontalValue = class extends exports.DirectionalValue {
-  constructor(value) {
-    super(value, exports.HorizontalValue.range);
+class Board {
+  constructor(size = 8) {
+    this.size = size;
+    this.touched = {};
   }
 
-  static get range() {
-    return ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'];
-  }
-}
-
-exports.VerticalValue = class extends exports.DirectionalValue {
-  constructor(value) {
-    super(value, exports.VerticalValue.range);
+  markPosition(position) {
+    this.touched[position.toString()] = true;
   }
 
-  static get range() {
-    return [1, 2, 3, 4, 5, 6, 7, 8];
+  unmarkPosition(position) {
+    this.touched[position.toString()] = false;
   }
 }
 
-exports.KnightPosition = class {
-  constructor(horizontal, vertical) {
-    // Ensure that the horizontal and vertical values are valid
-    if (!(horizontal instanceof exports.HorizontalValue) || !(vertical instanceof exports.VerticalValue)) {
-      throw new Error('Value must be of the expected classes');
-    }
-
+class Position {
+  constructor(horizontal = 1, vertical = 1) {
     this.horizontal = horizontal;
     this.vertical = vertical;
   }
 
-  /**
-   * @description This method will return the available new positions from the current position.
-   *
-   * @returns {Array} An array of the available new positions from the current position
-   */
-  getAvailableMoves() {
+  toString() {
+    return ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'][this.horizontal] + this.vertical;
+  }
+
+  getMoves() {
     const positions = [];
-    const points = [
-      { horizontal: -2, vertical: 1 },
-      { horizontal: -2, vertical: -1 },
-      { horizontal: -1, vertical: 2 },
-      { horizontal: -1, vertical: -2 },
-      { horizontal: 1, vertical: 2 },
-      { horizontal: 1, vertical: -2 },
-      { horizontal: 2, vertical: 1 },
-      { horizontal: 2, vertical: -1 }
+    const directions = [
+      { horizontal: -2, vertical: 1 }, { horizontal: -2, vertical: -1 }, { horizontal: -1, vertical: 2 }, { horizontal: -1, vertical: -2 },
+      { horizontal: 1, vertical: 2 }, { horizontal: 1, vertical: -2 }, { horizontal: 2, vertical: 1 }, { horizontal: 2, vertical: -1 }
     ];
 
-    for (let { horizontal, vertical } of points) {
-      if (this.horizontal.canMoveBy(horizontal) && this.vertical.canMoveBy(vertical)) {
-        horizontal = this.horizontal.getMoveBy(horizontal);
-        vertical = this.vertical.getMoveBy(vertical);
-
-        positions.push(exports.createKnightPosition(horizontal, vertical));
+    for (let { horizontal, vertical } of directions) {
+      if (Position.isValid(horizontal + this.horizontal, vertical + this.vertical)) {
+        positions.push(new Position(horizontal + this.horizontal, vertical + this.vertical));
       }
     }
 
     return positions;
   }
+
+  static isValid(horizontal, vertical) {
+    return Math.min(horizontal, vertical) > 0 && Math.max(horizontal, vertical) <= 8;
+  }
 }
 
-exports.createKnightPosition = (horizontal, vertical) => {
-  return new exports.KnightPosition(new exports.HorizontalValue(horizontal), new exports.VerticalValue(vertical));
-}
+const knight = new Knight();
+const board = new Board();
 
-let board = [];
+
 let touched = [];
 let history = [];
 
@@ -175,7 +119,7 @@ let history = [];
       i++
     }
   }
-  
+
   if (i !== board.length) {
     bruteForce();
   } else {
