@@ -2,6 +2,10 @@
 .idea
 .vscode
 
+# Ignore all Node.js and NPM related paths
+npm-debug.log
+node_modules
+
 # Misc
 *~
 *.swp
