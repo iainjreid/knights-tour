@@ -9,7 +9,7 @@
   "devDependencies": {},
   "scripts": {
     "build": "tsc index.ts",
-    "test": "NODE_ENV=testing node index.test.js"
+    "start": "node ."
   },
   "keywords": [],
   "author": "",
