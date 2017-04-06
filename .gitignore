@@ -6,6 +6,10 @@
 npm-debug.log
 node_modules
 
+# Ignore all SBT related paths
+target
+project
+
 # Misc
 *~
 *.swp
