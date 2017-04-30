@@ -19,6 +19,7 @@ object KnightsTour {
       val methodName = "BreakWhenBlocked"
 
       def exec = {
+
         ()
       }
     }
@@ -31,7 +32,11 @@ object KnightsTour {
   }
 
   def main(args: Array[String]) {
-    TourMethod.parse(args(0)).exec
+    if (args.nonEmpty) {
+      TourMethod.parse(args(0)).exec
+    } else {
+      throw new UnsupportedOperationException("No tour method provided")
+    }
   }
 
 }
