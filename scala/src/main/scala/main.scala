@@ -7,6 +7,7 @@ object KnightsTour {
   }
 
   object TourMethod {
+
     case object BruteForce extends TourMethod {
       val methodName = "BruteForce"
 
@@ -15,11 +16,10 @@ object KnightsTour {
       }
     }
 
-    case object BreakWhenBlocked extends  TourMethod {
+    case object BreakWhenBlocked extends TourMethod {
       val methodName = "BreakWhenBlocked"
 
       def exec = {
-
         ()
       }
     }
