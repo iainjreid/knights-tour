@@ -18,7 +18,7 @@ for (let i = 1; i <= boardSize; i++) {
   const knight = new Knight(position);
 
   while (knight.history.length < boardSize * boardSize) {
-    const moves = knight.position.getMoves(boardPositions).filter(move => !knight.history.includes(move.getIdentifier()));
+    const moves = knight.position.getMoves(boardPositions, boardSize).filter(move => !knight.history.includes(move.getIdentifier()));
 
     if (!moves.length) {
       break;
@@ -26,8 +26,8 @@ for (let i = 1; i <= boardSize; i++) {
 
     // Get least valueable move
     let move = moves.reduce((currMove, nxtMove) => {
-      const currMoveFutures = currMove.getMoves(boardPositions);
-      const nxtMoveFutures = nxtMove.getMoves(boardPositions);
+      const currMoveFutures = currMove.getMoves(boardPositions, boardSize);
+      const nxtMoveFutures = nxtMove.getMoves(boardPositions, boardSize);
 
       if (currMoveFutures.length === nxtMoveFutures.length) {
         return [currMove, nxtMove][Math.random() * 2 >> 0]

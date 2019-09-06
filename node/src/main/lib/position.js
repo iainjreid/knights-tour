@@ -10,7 +10,7 @@ module.exports = class Position {
     return Position.parseCoordinates(this.horizontal, this.vertical);
   }
 
-  getMoves(boardPositions) {
+  getMoves(boardPositions, boardSize) {
     const positions = [];
     const directions = [
       { horizontal: -2, vertical: 1 }, { horizontal: -2, vertical: -1 },
@@ -20,7 +20,7 @@ module.exports = class Position {
     ];
 
     for (let { horizontal, vertical } of directions) {
-      if (Position.isValid(horizontal + this.horizontal, vertical + this.vertical)) {
+      if (Position.isValid(horizontal + this.horizontal, vertical + this.vertical, boardSize)) {
         positions.push(boardPositions[Position.parseCoordinates(horizontal + this.horizontal, vertical + this.vertical)]);
       }
     }
@@ -28,7 +28,7 @@ module.exports = class Position {
     return positions;
   }
 
-  static isValid(horizontal, vertical) {
+  static isValid(horizontal, vertical, boardSize) {
     return Math.min(horizontal, vertical) > 0 && Math.max(horizontal, vertical) <= boardSize;
   }
 
