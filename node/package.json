@@ -1,22 +1,27 @@
 {
   "name": "knights-tour",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
-  "devDependencies": {
-    "@emphori/eslint-config": "^0.1.4",
-    "eslint": "^6.3.0"
-  },
+  "main": "src/main/index.js",
+  "author": "Iain Reid <iainreid382@gmail.com> (https://chaff.land)",
   "scripts": {
     "lint": "eslint .",
-    "start": "node .",
-    "test": "NODE_ENV=testing node index.test.js"
+    "test": "jest"
+  },
+  "devDependencies": {
+    "@emphori/eslint-config": "^0.1.4",
+    "@emphori/jest-preset": "0.0.3",
+    "eslint": "^6.3.0",
+    "jest": "^24.9.0"
   },
   "eslintConfig": {
-    "extends": "@emphori"
+    "extends": "@emphori",
+    "env": {
+      "jest": true
+    }
   },
-  "keywords": [],
-  "author": "",
+  "jest": {
+    "preset": "@emphori/jest-preset"
+  },
   "license": "MIT",
   "private": true
 }
