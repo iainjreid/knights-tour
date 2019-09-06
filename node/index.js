@@ -31,7 +31,7 @@ class Position {
       { horizontal: -2, vertical: 1 }, { horizontal: -2, vertical: -1 },
       { horizontal: -1, vertical: 2 }, { horizontal: -1, vertical: -2 },
       { horizontal: 1, vertical: 2 }, { horizontal: 1, vertical: -2 },
-      { horizontal: 2, vertical: 1 }, { horizontal: 2, vertical: -1 }
+      { horizontal: 2, vertical: 1 }, { horizontal: 2, vertical: -1 },
     ];
 
     for (let { horizontal, vertical } of directions) {

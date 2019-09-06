@@ -7,7 +7,7 @@ const assert = require('assert');
 const knightsTour = require('.');
 
 // Ensure that the required classes are correctly defined
-assertType(knightsTour.DirectionalValue, 'function'); 
+assertType(knightsTour.DirectionalValue, 'function');
 assertType(knightsTour.HorizontalValue, 'function');
 assertType(knightsTour.VerticalValue, 'function');
 assertType(knightsTour.KnightPosition, 'function');
@@ -33,6 +33,8 @@ console.log(knightsTour.createKnightPosition('D', 1).getAvailableMoves())
  *
  * @param {any}    reference A reference to the value to verfify
  * @param {string} type      The expected data type
+ *
+ * @return {void}
  */
 function assertType(reference, type) {
   assert.equal(typeof reference, type);
